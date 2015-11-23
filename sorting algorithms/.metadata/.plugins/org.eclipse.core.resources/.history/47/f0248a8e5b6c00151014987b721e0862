@@ -1,0 +1,134 @@
+#include <vector>
+#include "sort.hpp"
+
+template <typename T>
+void mergesort_recursive(std::vector<T> &a) {
+	std::vector<T> tmp( a.size( ) );
+	std::vector<T> mergesort_recursive(a, tmp, 0, a.size() - 1);
+}
+
+template <typename T>
+void mergesort_iterative(std::vector<T> &a) {
+	std::vector<T> tmp( a.size( ) );
+	std::vector<T> mergesort_iterative(a, tmp, 0, a.size() - 1);
+}
+
+template <typename T>
+void quicksort(std::vector<T> &a) {
+	std::vector<T> quicksort(a, 0, a.size() - 1);
+}
+
+
+template <typename T>
+void insertion_sort (std::vector<T> &a) {
+  for (unsigned long int i = 1; i < a.size(); i++) {
+    for (unsigned long int j = i; (j > 0) && (a[j] < a[j - 1]); j--) {
+      std::swap(a[j], a[j - 1]);
+    }
+  }
+}
+
+template <typename T>
+void merge(std::vector<T> &a, std::vector<T> &tmp, unsigned long int low,
+		unsigned long int mid, unsigned long int high) {
+  unsigned long int i = low;
+  unsigned long int Mid = mid - 1;
+  unsigned long int size = high - low + 1;
+
+
+  while (low != Mid && mid != a.size() - 1) {
+    if (a[low] <= a[mid]) {
+      tmp[i] = std::move(a[low]);
+      low++;
+    } else {
+      tmp[i] = std::move(a[mid]);
+       mid++;
+    }
+    i++;
+  }
+
+  while (low != Mid) {
+    tmp[i] = std::move(a[low]);
+    low++;
+    i++;
+  }
+
+  while ( mid != a.size() - 1) {
+    tmp[i] = std::move(a[mid]);
+    mid++;
+    i++;
+
+  }
+
+  for (int j = 0; j < size; j++) {
+    a[j] = std::move(tmp[j]);
+  }
+}
+
+template <typename T>
+void mergesort_recursive (std::vector<T> &a, std::vector<T> &tmp,
+		unsigned long int low, unsigned long int high) {
+  if (low + 40 > high) {
+    insertion_sort(a);
+  } else {
+    int mid = floor((low + high)/2);
+    mergesort_recursive(a, tmp, low, mid);
+    mergesort_recursive(a, tmp, mid + 1, high);
+    merge(a, tmp, low, mid + 1, high);
+  }
+}
+
+template <typename T>
+void mergesort_iterative (std::vector<T> &a, std::vector<T> &tmp,
+		unsigned long int low, unsigned long int high) {
+   if (a.size() < 40) {
+    insertion_sort(a);
+   } else {
+     for (int i = 0; i < a.size(); i = i*2) {
+       for (int j = 0; j < a.size(); j += 2*i) {
+         std::vector<T> newVec1(a.begin(), a.begin() + j + i - 1);
+         std::vector<T> newVec2(a.begin() + j + i, a.end());
+         merge(a, tmp, low, mid + 1, high);
+       }
+     }
+   }
+}
+
+template <typename T>
+void quicksort(std::vector<T> &a) {
+	quicksort(a, 0, a.size() - 1);
+}
+
+template <typename T>
+long int partition(std::vector<T> &a, int mid) {
+  T pivot = a[0];
+  long int i = 1;
+  long int j = a.size()-1;
+
+  while (i < j) {
+    while (a[i] < pivot) {
+      i++;
+      if (i == a.size() - 1) break;
+    }
+    while (a[j] > pivot) {
+      j--;
+      if (j == 0) break;
+    }
+    std::swap(a[i], a[j]);
+  }
+
+  std::swap(a[0], a[j]);
+  return j;
+}
+
+template <typename T>
+void quicksort (std::vector<T> &a) {
+  if (a.size() == 1) return;
+  int pivot = partition(a);
+  std::vector<T> newVec1(a.begin(), a.begin() + pivot);
+  std::vector<T> newVec2(a.begin() + pivot + 1, a.end());
+  quicksort(newVec1);
+  quicksort(newVec2);
+}
+
+

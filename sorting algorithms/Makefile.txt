@@ -1,0 +1,6 @@
+CC = g++
+CCFLAGS = -O3 -g -std=c++11 -Wall -pedantic 
+
+sort: main.cpp sort.cpp instantiate.cpp
+	$(CC) $(CCFLAGS) -o sort main.cpp sort.cpp instantiate.cpp
+
